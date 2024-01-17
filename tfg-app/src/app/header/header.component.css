@@ -1,0 +1,13 @@
+div {
+    background-color: skyblue;
+    padding: 20px;
+    margin: 0;
+}
+h3 {
+    display: inline;
+    margin-right: 50px;
+}
+
+a {
+    margin: 5px;
+}
