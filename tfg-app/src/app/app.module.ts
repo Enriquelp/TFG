@@ -10,7 +10,13 @@ import { BusquedaOnlineComponent } from './busqueda-online/busqueda-online.compo
 import { BusquedaBdComponent } from './busqueda-bd/busqueda-bd.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatToolbarModule} from '@angular/material/toolbar';
-
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDividerModule} from '@angular/material/divider';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,6 +32,14 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule, 
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule,
+    MatDividerModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
