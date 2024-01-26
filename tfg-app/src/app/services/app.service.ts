@@ -15,13 +15,9 @@ export class AppService{
     urltest: string ='http://127.0.0.1:5000/api/test'
 
 
-    // getTest(): Observable<object | undefined>{
-    //     return this.http.get<object>(this.urlBuscarOnline).pipe(catchError((error) => {
-    //             console.log(error)
-    //             return of(undefined)
-    //         })
-    //     )
-    // }
+    getTest() {
+       return 'esta es la respuesta del backend'
+    }
 
 
 

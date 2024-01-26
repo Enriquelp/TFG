@@ -6,7 +6,7 @@ import re # Para expresiones regulares
 
 app = Flask(__name__)
 
-@app.route('/api/buscaronline')
+@app.route('/api/buscaronline', methods = ['GET'])
 def buscar(idioma, busqueda, paginas):
     
     # listas donde se guardaran los datos
