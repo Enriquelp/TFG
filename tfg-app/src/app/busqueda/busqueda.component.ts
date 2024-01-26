@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+// import { AppService } from '../services/app.service';
 
 
 
@@ -11,6 +12,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 
 export class BusquedaComponent implements AfterViewInit {
+
+  // constructor(private service : AppService){}
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
@@ -27,6 +30,7 @@ export class BusquedaComponent implements AfterViewInit {
   busqueda: string = ""
   idioma: string = ""
   paginas: number = 0
+  respuesta = ""
 
   guardarDatos(){
     console.log('Datos guardados:', this.busqueda, this.idioma, this.paginas);
@@ -40,6 +44,12 @@ export class BusquedaComponent implements AfterViewInit {
   buscarEnInternet() {
     this.botonDesactivado = false
     console.log('Buscando en Google Schoolar.');
+    // this.service.getTest().subscribe({
+    //   //Terminar
+    //   error: (err) => {
+    //     console.log(err)
+    //   }
+    // })
   }
 
   subirABD(){
