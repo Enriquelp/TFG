@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { BusquedaBdComponent } from './busqueda-bd/busqueda-bd.component';
-import { BusquedaOnlineComponent } from './busqueda-online/busqueda-online.component';
+import { BusquedaComponent } from './busqueda/busqueda.component';
 
 const routes: Routes = [
   {
@@ -10,12 +9,8 @@ const routes: Routes = [
     component:HomeComponent
   },
   {
-    path:'busqueda-bd',
-    component:BusquedaBdComponent
-  },
-  {
-    path:'busqueda-online',
-    component:BusquedaOnlineComponent
+    path:'busqueda',
+    component:BusquedaComponent
   }
 ];
 

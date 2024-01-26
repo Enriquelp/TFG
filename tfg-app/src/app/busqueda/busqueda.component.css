@@ -1,0 +1,23 @@
+.formulario{
+    margin: 10px 0px 30px 15px; /*margenes en sentido horario*/
+}
+
+mat-form-field {
+    margin-inline: 10px;
+}
+
+table {
+    width: 100%;
+  }
+
+  .mat-elevation-z8{
+    margin: 25px 30px 25px 30px;
+  }
+
+.botonSubir{
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-right: 30px;
+}
