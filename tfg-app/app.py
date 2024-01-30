@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
@@ -73,6 +73,7 @@ def buscar(idioma, busqueda, paginas):
     df_articulos.to_csv("Lista de articulos", index=False)
     print(df_articulos) 
     #insertar_datos_bd(df_autores, df_articulos)
+    #return jsonify(df_articulos.to_dict(orient='records')) Para convertir a JSON el dataframe
 
 # Tratamos el string para eliminar todo lo que no sea el nombre del autor o autores, y de paso guardamos la fecha
 def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutores):
@@ -129,9 +130,13 @@ def buscarbd():
     return 'Buscar en base de datos'
 
 
-@app.route('/api/test')
+@app.route('/api/test', methods=['GET'])
 def saludar():
-    return '¡Back End funcionando!'
+    idioma = request.args.get('idioma')
+    busqueda = request.args.get('busqueda')
+    paginas = request.args.get('paginas')
+    data = {"mensaje": "Hola desde Flask!", "busqueda": busqueda}
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)

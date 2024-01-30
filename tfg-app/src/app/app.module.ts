@@ -18,6 +18,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -42,6 +43,8 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
     MatDividerModule,
     MatPaginatorModule,
     MatTableModule,
+    HttpClientModule
+    
     
   ],
   providers: [],

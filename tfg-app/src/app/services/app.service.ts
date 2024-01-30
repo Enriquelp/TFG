@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, of } from "rxjs";
 
@@ -15,8 +15,13 @@ export class AppService{
     urltest: string ='http://127.0.0.1:5000/api/test'
 
 
-    getTest() {
-       return 'esta es la respuesta del backend'
+    getTest(busqueda: string, idioma: string, paginas: number): Observable<any>{
+        let params = new HttpParams()
+        .set('idioma', idioma)
+        .set('busqueda', busqueda)
+        .set('paginas', paginas);
+
+       return this.http.get(this.urltest)
     }
 
 
