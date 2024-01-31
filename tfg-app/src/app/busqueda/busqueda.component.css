@@ -21,3 +21,11 @@ table {
     margin-bottom: 10px;
     margin-right: 30px;
 }
+
+.cargando{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-right: 30px;
+}

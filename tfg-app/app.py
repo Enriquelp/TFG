@@ -1,13 +1,19 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import re # Para expresiones regulares
 
 app = Flask(__name__)
+CORS(app, supports_credentials=True)  
 
 @app.route('/api/buscaronline', methods = ['GET'])
-def buscar(idioma, busqueda, paginas):
+def buscar():
+
+    idioma = request.args.get('idioma')
+    busqueda = request.args.get('busqueda')
+    paginas = int(request.args.get('paginas'))
     
     # listas donde se guardaran los datos
     titulos = list()
@@ -73,7 +79,7 @@ def buscar(idioma, busqueda, paginas):
     df_articulos.to_csv("Lista de articulos", index=False)
     print(df_articulos) 
     #insertar_datos_bd(df_autores, df_articulos)
-    #return jsonify(df_articulos.to_dict(orient='records')) Para convertir a JSON el dataframe
+    return jsonify(df_articulos.to_dict(orient='records'))
 
 # Tratamos el string para eliminar todo lo que no sea el nombre del autor o autores, y de paso guardamos la fecha
 def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutores):
@@ -135,6 +141,7 @@ def saludar():
     idioma = request.args.get('idioma')
     busqueda = request.args.get('busqueda')
     paginas = request.args.get('paginas')
+    print(busqueda, idioma, paginas)
     data = {"mensaje": "Hola desde Flask!", "busqueda": busqueda}
     return jsonify(data)
 

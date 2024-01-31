@@ -13,6 +13,8 @@ import re # Para expresiones regulares
 
 # Metodo principal
 def main(idioma, busqueda, paginas):
+
+    print("Ejecutando script")
     
     # listas donde se guardaran los datos
     titulos = list()
@@ -34,8 +36,11 @@ def main(idioma, busqueda, paginas):
     cont=0
     while(cont <= paginas):
         url = raiz+f'scholar?hl={idioma}&as_sdt=0%2C5&q={busqueda}&start={str(cont)}0'
+        print(f'Buscando en {url}')
         page = requests.get(url)
+        print('Pagina recibida')
         soup = BeautifulSoup(page.content, 'html.parser')
+        print('Pagina parseada')
         resultados = soup.findAll('div', class_='gs_r gs_or gs_scl')
         
         

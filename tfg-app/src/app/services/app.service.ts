@@ -14,14 +14,20 @@ export class AppService{
     urlBuscarBD: string = 'http://127.0.0.1:5000/api/buscarbd'
     urltest: string ='http://127.0.0.1:5000/api/test'
 
+    getBusquedaOnline(busqueda: string, idioma: string, paginas: number): Observable<any>{
+        let params = new HttpParams()
+        .set('idioma', idioma)
+        .set('busqueda', busqueda)
+        .set('paginas', paginas);
+       return this.http.get(this.urlBuscarOnline, {params})
+    }
 
     getTest(busqueda: string, idioma: string, paginas: number): Observable<any>{
         let params = new HttpParams()
         .set('idioma', idioma)
         .set('busqueda', busqueda)
         .set('paginas', paginas);
-
-       return this.http.get(this.urltest)
+       return this.http.get(this.urltest, {params})
     }
 
 

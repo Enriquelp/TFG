@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 import { AppService } from '../services/app.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -18,15 +19,21 @@ export class BusquedaComponent implements AfterViewInit {
   constructor(private service : AppService){}
 
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns2: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  dataSource2 = new MatTableDataSource<Articulo>;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+  @ViewChild(MatSort) 
+  sort!: MatSort;
 
   botonDesactivado: boolean = false;
 
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   busqueda: string = ""
@@ -34,6 +41,9 @@ export class BusquedaComponent implements AfterViewInit {
   paginas: number = 0
   respuesta: any
   error!: string 
+  cargando: boolean = false;
+
+
   guardarDatos(){
     console.log('Datos guardados:', this.busqueda, this.idioma, this.paginas);
   }
@@ -43,10 +53,11 @@ export class BusquedaComponent implements AfterViewInit {
     console.log('Buscando en base de datos.');
   }
 
-  buscarEnInternet() {
+  async buscarEnInternet() {
+    this.cargando = true
     this.botonDesactivado = false
     console.log('Buscando en Google Schoolar.');
-    this.service.getTest(this.busqueda, this.idioma, this.paginas).pipe(
+    this.service.getBusquedaOnline(this.busqueda, this.idioma, this.paginas).pipe(
       catchError(err => {
         this.error = 'Ha ocurrido un error al obtener los datos.';
         console.error(err);
@@ -55,14 +66,25 @@ export class BusquedaComponent implements AfterViewInit {
     ).subscribe(response =>{
       this.respuesta = response
       this.error = ''
+      console.log(this.respuesta)
+      this.cargando = false
     })
-    console.log(this.respuesta)
   }
 
   subirABD(){
     console.log('Subiendo busqueda a base de datos')
   }
 
+}
+
+export interface Articulo{
+  titulo: string;
+  citas: number;
+  autor1: string;
+  autor2: string;
+  autor3: string;
+  añoPubli: number;
+  enlace: string;
 }
 
 export interface PeriodicElement {

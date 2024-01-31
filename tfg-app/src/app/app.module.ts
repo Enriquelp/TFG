@@ -19,6 +19,8 @@ import { FormsModule } from '@angular/forms';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
@@ -43,8 +45,9 @@ import { HttpClientModule } from '@angular/common/http';
     MatDividerModule,
     MatPaginatorModule,
     MatTableModule,
-    HttpClientModule
-    
+    HttpClientModule,
+    MatProgressSpinnerModule,
+    MatSortModule,
     
   ],
   providers: [],

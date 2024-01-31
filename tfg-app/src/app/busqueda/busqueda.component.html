@@ -28,6 +28,10 @@
         <button mat-button type="submit" (click)="buscarEnBD()">Buscar en Base de Datos</button>
         <button mat-button type="submit" (click)="buscarEnInternet()">Buscar en Google Schoolar</button>
     </form>
+
+    <div class="cargando" *ngIf="cargando">
+        <mat-spinner></mat-spinner>
+    </div>
 </div>
 
 <mat-divider></mat-divider>
