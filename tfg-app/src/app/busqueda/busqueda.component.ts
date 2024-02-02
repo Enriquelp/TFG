@@ -18,18 +18,14 @@ export class BusquedaComponent implements AfterViewInit {
 
   constructor(private service : AppService){}
 
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  displayedColumns2: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
-  dataSource2 = new MatTableDataSource<Articulo>;
+  datosBusqueda: Articulo[] = []
+  displayedColumns: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
+  dataSource = new MatTableDataSource<Articulo>(this.datosBusqueda);
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   @ViewChild(MatSort) 
   sort!: MatSort;
-
-  botonDesactivado: boolean = false;
-
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -39,9 +35,9 @@ export class BusquedaComponent implements AfterViewInit {
   busqueda: string = ""
   idioma: string = ""
   paginas: number = 0
-  respuesta: any
   error!: string 
   cargando: boolean = false;
+  botonDesactivado: boolean = false;
 
 
   guardarDatos(){
@@ -64,10 +60,11 @@ export class BusquedaComponent implements AfterViewInit {
         return of(null);
       })
     ).subscribe(response =>{
-      this.respuesta = response
+      this.datosBusqueda = response
       this.error = ''
-      console.log(this.respuesta)
+      console.log(this.datosBusqueda)
       this.cargando = false
+      this.dataSource.data = this.datosBusqueda;
     })
   }
 
@@ -78,41 +75,12 @@ export class BusquedaComponent implements AfterViewInit {
 }
 
 export interface Articulo{
-  titulo: string;
-  citas: number;
-  autor1: string;
-  autor2: string;
-  autor3: string;
-  añoPubli: number;
-  enlace: string;
+  Titulo: string;
+  Citas: number;
+  'Autor 1': string;
+  'Autor 2': string;
+  'Autor 3': string;
+  'Año de publicación': number;
+  Enlace: string;
 }
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-  {position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na'},
-  {position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg'},
-  {position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al'},
-  {position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si'},
-  {position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P'},
-  {position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S'},
-  {position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl'},
-  {position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar'},
-  {position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K'},
-  {position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca'},
-];

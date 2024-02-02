@@ -74,11 +74,10 @@ def buscar():
     # creamos los dataframe y guardamos los datos en csv
     df_autores = pd.DataFrame({"Nombre": listaAutores, "firma": ""})
     df_autores.to_csv("Lista de autores", index=False)
-    print(df_autores)
+    #print(df_autores)
     df_articulos = pd.DataFrame({'Titulo': titulos, 'Citas': citas, 'Autor 1': autores1, 'Autor 2': autores2, 'Autor 3': autores3, 'Año': anoPublicacion, 'Enlace': link})
     df_articulos.to_csv("Lista de articulos", index=False)
-    print(df_articulos) 
-    #insertar_datos_bd(df_autores, df_articulos)
+    #print(df_articulos) 
     return jsonify(df_articulos.to_dict(orient='records'))
 
 # Tratamos el string para eliminar todo lo que no sea el nombre del autor o autores, y de paso guardamos la fecha
