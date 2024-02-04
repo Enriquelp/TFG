@@ -80,7 +80,7 @@ export interface Articulo{
   'Autor 1': string;
   'Autor 2': string;
   'Autor 3': string;
-  'Año de publicación': number;
+  'Año': number;
   Enlace: string;
 }
 

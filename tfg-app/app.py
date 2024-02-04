@@ -46,28 +46,35 @@ def buscar():
             #separamos la pagina en 2 variables, la que contiene el enlace al documento y el resto
             cuerpo = i.find('div', class_='gs_ri')
             enlace = i.find('div', class_='gs_or_ggsm')
+            if cuerpo is not None:
             
-            # titulo
-            tit = cuerpo.find('h3', class_='gs_rt').find('a')
-            titulos.append(re.sub(r'[^a-zA-Z0-9\s]', '', tit.text)) #eliminamos los caracteres no alfanumericos del titulo
-            
-            # citas
-            num_citas = cuerpo.find('div', class_='gs_fl').find_all('a')[2]
-            num_citas = re.findall('[1234567890]+', num_citas.text)
-            if num_citas:
-                citas.append(num_citas[0])
-            else:
-                citas.append('0')
+                # titulo
+                if cuerpo.find('h3', class_='gs_rt').find('a'):
+                    tit = cuerpo.find('h3', class_='gs_rt').find('a')
+                    titulos.append(re.sub(r'[^a-zA-Z0-9\s]', '', tit.text)) #eliminamos los caracteres no alfanumericos del titulo
+                else: titulos.append("No encontrado")
+                
+                # citas
+                if cuerpo.find('div', class_='gs_fl').find_all('a')[2]:
+                    num_citas = cuerpo.find('div', class_='gs_fl').find_all('a')[2]
+                    num_citas = re.findall('[1234567890]+', num_citas.text)
+                    if num_citas:
+                        citas.append(num_citas[0])
+                    else:
+                        citas.append('0')
+                else: titulos.append("No encontrado")
 
-            # autor y fecha
-            aut = cuerpo.find('div', class_='gs_a')
-            autores1, autores2, autores3, anoPublicacion, listaAutores = tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutores)
-            
-            # enlace del documento (Puede tener o no)
-            if enlace != None:
-                link.append(enlace.find('a', href=True)['href'])
-            else: 
-                link.append('')
+                # autor y fecha
+                if cuerpo.find('div', class_='gs_a'):
+                    aut = cuerpo.find('div', class_='gs_a')
+                    autores1, autores2, autores3, anoPublicacion, listaAutores = tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutores)
+                else: titulos.append("No encontrado")
+                
+                # enlace del documento (Puede tener o no)
+                if enlace != None:
+                    link.append(enlace.find('a', href=True)['href'])
+                else: 
+                    link.append('No encontrado')
                 
         cont +=1
             
@@ -77,7 +84,7 @@ def buscar():
     #print(df_autores)
     df_articulos = pd.DataFrame({'Titulo': titulos, 'Citas': citas, 'Autor 1': autores1, 'Autor 2': autores2, 'Autor 3': autores3, 'Año': anoPublicacion, 'Enlace': link})
     df_articulos.to_csv("Lista de articulos", index=False)
-    #print(df_articulos) 
+    print(df_articulos) 
     return jsonify(df_articulos.to_dict(orient='records'))
 
 # Tratamos el string para eliminar todo lo que no sea el nombre del autor o autores, y de paso guardamos la fecha
@@ -128,7 +135,7 @@ def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutor
     if aut3 != '' : listaAutores.append(aut3)
     listaAutores = list(set(listaAutores)) #elimino autores repetidos
     
-    return autores1, autores2, autores3, anoPublicacion, listaAutores # aut1.strip(), aut2.strip(), aut3.strip(), fecha
+    return autores1, autores2, autores3, anoPublicacion, listaAutores 
 
 @app.route('/api/buscarbd')
 def buscarbd():
