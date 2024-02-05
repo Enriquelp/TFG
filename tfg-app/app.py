@@ -74,7 +74,7 @@ def buscar():
                 if enlace != None:
                     link.append(enlace.find('a', href=True)['href'])
                 else: 
-                    link.append('No encontrado')
+                    link.append('')
                 
         cont +=1
             
