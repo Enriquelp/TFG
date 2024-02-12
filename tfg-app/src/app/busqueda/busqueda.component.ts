@@ -19,7 +19,7 @@ export class BusquedaComponent implements AfterViewInit {
   constructor(private service : AppService){}
 
   datosBusqueda: Articulo[] = []
-  displayedColumns: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
+  displayedColumns: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Resto autores', 'Año de publicación', 'Enlace'];
   dataSource = new MatTableDataSource<Articulo>(this.datosBusqueda);
 
   @ViewChild(MatPaginator)
@@ -79,7 +79,7 @@ export interface Articulo{
   Citas: number;
   'Autor 1': string;
   'Autor 2': string;
-  'Autor 3': string;
+  'Resto autores': string;
   'Año': number;
   Enlace: string;
 }

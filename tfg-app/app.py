@@ -80,10 +80,10 @@ def buscar():
             
     # creamos los dataframe y guardamos los datos en csv
     df_autores = pd.DataFrame({"Nombre": listaAutores, "firma": ""})
-    df_autores.to_csv("Lista de autores", index=False)
+    df_autores.to_csv("/src/app/assets/Lista_de_autores.csv", index=False)
     #print(df_autores)
     df_articulos = pd.DataFrame({'Titulo': titulos, 'Citas': citas, 'Autor 1': autores1, 'Autor 2': autores2, 'Autor 3': autores3, 'Año': anoPublicacion, 'Enlace': link})
-    df_articulos.to_csv("Lista de articulos", index=False)
+    df_articulos.to_csv("/src/app/assets/Lista_de_articulos.csv", index=False)
     print(df_articulos) 
     return jsonify(df_articulos.to_dict(orient='records'))
 
