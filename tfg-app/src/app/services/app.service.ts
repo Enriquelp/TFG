@@ -13,6 +13,7 @@ export class AppService{
     urlBuscarOnline: string = 'http://127.0.0.1:5000/api/buscaronline';
     urlBuscarBD: string = 'http://127.0.0.1:5000/api/buscarbd'
     urltest: string ='http://127.0.0.1:5000/api/test'
+    urlDescargar: string = 'http://127.0.0.1:5000/api/descargarCSV'
 
     getBusquedaOnline(busqueda: string, idioma: string, paginas: number): Observable<any>{
         let params = new HttpParams()

@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import re # Para expresiones regulares
+import time # Para poder parar la ejecucion del codigo durante x segundos
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)  
@@ -77,14 +78,15 @@ def buscar():
                     link.append('')
                 
         cont +=1
+        time.sleep(2) # Paramos la ejecucion 2 segudno para evitar bloqueos de scrapping
             
     # creamos los dataframe y guardamos los datos en csv
     df_autores = pd.DataFrame({"Nombre": listaAutores, "firma": ""})
-    df_autores.to_csv("/src/app/assets/Lista_de_autores.csv", index=False)
+    df_autores.to_csv("Lista de autores", index=False)
     #print(df_autores)
     df_articulos = pd.DataFrame({'Titulo': titulos, 'Citas': citas, 'Autor 1': autores1, 'Autor 2': autores2, 'Autor 3': autores3, 'Año': anoPublicacion, 'Enlace': link})
-    df_articulos.to_csv("/src/app/assets/Lista_de_articulos.csv", index=False)
-    print(df_articulos) 
+    df_articulos.to_csv("Lista de articulos", index=False)
+    # print(df_articulos) 
     return jsonify(df_articulos.to_dict(orient='records'))
 
 # Tratamos el string para eliminar todo lo que no sea el nombre del autor o autores, y de paso guardamos la fecha
@@ -140,7 +142,6 @@ def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutor
 @app.route('/api/buscarbd')
 def buscarbd():
     return 'Buscar en base de datos'
-
 
 @app.route('/api/test', methods=['GET'])
 def saludar():
