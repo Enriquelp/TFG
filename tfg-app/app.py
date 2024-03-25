@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from bs4 import BeautifulSoup
+import sqlite3 # Para la base de datos ligera
 import requests
 import pandas as pd
 import re # Para expresiones regulares
@@ -84,7 +85,7 @@ def buscar():
     df_autores = pd.DataFrame({"Nombre": listaAutores, "firma": ""})
     df_autores.to_csv("Lista de autores", index=False)
     #print(df_autores)
-    df_articulos = pd.DataFrame({'Titulo': titulos, 'Citas': citas, 'Autor 1': autores1, 'Autor 2': autores2, 'Autor 3': autores3, 'Año': anoPublicacion, 'Enlace': link})
+    df_articulos = pd.DataFrame({'Titulo': titulos, 'Citas': citas, 'Año': anoPublicacion, 'Enlace': link,'Autor 1': autores1, 'Autor 2': autores2, 'Autor 3': autores3, })
     df_articulos.to_csv("Lista de articulos", index=False)
     # print(df_articulos) 
     return jsonify(df_articulos.to_dict(orient='records'))
@@ -153,4 +154,4 @@ def saludar():
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
