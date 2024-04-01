@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 
 
 
+
 @Component({
   selector: 'app-busqueda',
   templateUrl: './busqueda.component.html',
@@ -19,8 +20,12 @@ export class BusquedaComponent implements AfterViewInit {
   constructor(private service : AppService){}
 
   datosBusqueda: Articulo[] = []
-  displayedColumns: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
-  dataSource = new MatTableDataSource<Articulo>(this.datosBusqueda);
+  busquedaAnterior: [] = []
+  articulos_displayedColumns: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
+  articulos_dataSource = new MatTableDataSource<Articulo>(this.datosBusqueda);
+
+  busquedas_displayedColumns: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
+  busquedas_dataSource = new MatTableDataSource<Articulo>(this.datosBusqueda);
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -28,8 +33,8 @@ export class BusquedaComponent implements AfterViewInit {
   sort!: MatSort;
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.articulos_dataSource.paginator = this.paginator;
+    this.articulos_dataSource.sort = this.sort;
   }
 
   busqueda: string = ""
@@ -37,21 +42,46 @@ export class BusquedaComponent implements AfterViewInit {
   paginas: number = 0
   error!: string 
   cargando: boolean = false;
-  botonDesactivado: boolean = false;
 
 
   guardarDatos(){
     console.log('Datos guardados:', this.busqueda, this.idioma, this.paginas);
   }
   
-  buscarEnBD() {
-    this.botonDesactivado = true
-    console.log('Buscando en base de datos.');
+  cargarBusquedasAnteriores() {
+    console.log('Cargando busquedas anteriores.');
+    this.service.getBusquedasAnteriores().pipe(
+      catchError(err => {
+        this.error = 'Error al cargar busquedas anteriores.';
+        console.error(err);
+        return of(null);
+      })
+    ).subscribe(response =>{
+      this.busquedaAnterior = response;
+      this.error = ''
+      console.log(this.busquedaAnterior)
+    })
+  }
+
+  onClickFila(rdo:any){
+    console.log("Se hizo clic en la fila:", rdo);
+    this.service.getBusquedasArticulos(rdo[0]).pipe(
+      catchError(err => {
+        this.error = 'Error al obtener los articulos de la busqueda seleccionada.';
+        console.error(err);
+        return of(null);
+      })
+    ).subscribe(response =>{
+      this.datosBusqueda = response
+      this.error = ''
+      console.log(this.datosBusqueda)
+      this.cargando = false
+      this.articulos_dataSource.data = this.datosBusqueda;
+    })
   }
 
   async buscarEnInternet() {
     this.cargando = true
-    this.botonDesactivado = false
     console.log('Buscando en Google Schoolar.');
     this.service.getBusquedaOnline(this.busqueda, this.idioma, this.paginas).pipe(
       catchError(err => {
@@ -64,12 +94,8 @@ export class BusquedaComponent implements AfterViewInit {
       this.error = ''
       console.log(this.datosBusqueda)
       this.cargando = false
-      this.dataSource.data = this.datosBusqueda;
+      this.articulos_dataSource.data = this.datosBusqueda;
     })
-  }
-
-  subirABD(){
-    console.log('Subiendo busqueda a base de datos')
   }
 }
 

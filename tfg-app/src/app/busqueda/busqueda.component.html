@@ -25,7 +25,7 @@
             </mat-select>
             <mat-hint> Buscar x primeras paginas</mat-hint>
         </mat-form-field>
-        <button mat-button type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">Busquedas anteriores</button>
+        <button mat-button type="submit" (click)="cargarBusquedasAnteriores() "data-bs-toggle="modal" data-bs-target="#busquedasModal">Busquedas anteriores</button>
         <button mat-button type="submit" (click)="buscarEnInternet()">Buscar en Google Schoolar</button>
     </form>
 
@@ -37,7 +37,7 @@
 <mat-divider></mat-divider>
 
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="articulos_dataSource">
 
     <!-- Titulo Column -->
     <ng-container matColumnDef="Titulo">
@@ -85,8 +85,8 @@
         </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="articulos_displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: articulos_displayedColumns;"></tr>
     </table>
 
     <mat-paginator [pageSizeOptions]="[5, 10, 20]"
@@ -95,25 +95,32 @@
     </mat-paginator>
 </div>
 
-<div class="botonSubir">
-    <button [disabled]="botonDesactivado" (click)="subirABD()">Actualizar Base de Datos</button>
-</div>
-
-
 <!-- MODAL -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="busquedasModal" tabindex="-1" aria-labelledby="busquedasModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <h1 class="modal-title fs-5" id="busquedasModalLabel">Busquedas anteriores</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            ...
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Búsqueda</th>
+                        <th>Fecha</th>
+                    </tr>
+                  </thead>
+                  <tbody >
+                    <tr *ngFor="let rdo of busquedaAnterior" (click)="onClickFila(rdo)" data-bs-dismiss="modal">
+                        <td>{{ rdo[1] }}</td>
+                        <td>{{ rdo[2] }}</td>
+                    </tr>
+                  </tbody>
+            </table>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
         </div>
         </div>
     </div>

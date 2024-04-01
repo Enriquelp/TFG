@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from bs4 import BeautifulSoup
 import sqlite3 # Para la base de datos ligera
+import json
 import requests
 import pandas as pd
 import re # Para expresiones regulares
@@ -10,7 +11,7 @@ import time # Para poder parar la ejecucion del codigo durante x segundos
 app = Flask(__name__)
 CORS(app, supports_credentials=True)  
 
-@app.route('/api/buscaronline', methods = ['GET'])
+@app.route('/api/buscar-online', methods = ['GET'])
 def buscar():
 
     idioma = request.args.get('idioma')
@@ -140,9 +141,41 @@ def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutor
     
     return autores1, autores2, autores3, anoPublicacion, listaAutores 
 
-@app.route('/api/buscarbd')
+@app.route('/api/busquedas-anteriores', methods = ['GET'])
 def buscarbd():
-    return 'Buscar en base de datos'
+    conn = sqlite3.connect('databaseTFG.db') # creamos la conexion con la base de datos (si no existe la db, la crea)
+    c = conn.cursor()
+    c.execute('SELECT * FROM busquedas')
+    busquedas = c.fetchall()
+    conn.close()
+    return busquedas
+
+@app.route('/api/busqueda-bd', methods = ['GET'])
+def buscarPorId():
+    conn = sqlite3.connect('databaseTFG.db') # creamos la conexion con la base de datos (si no existe la db, la crea)
+    c = conn.cursor()
+    id = request.args.get('idBusqueda')
+    c.execute("""
+          SELECT a.titulo, a.citas, a.fecha_publicacion, a.enlace, a.aut_1, a.aut_2, a.aut_3 FROM articulos a
+          INNER JOIN busquedas_articulos ba ON a.id = ba.articulo_id
+          INNER JOIN busquedas b ON b.id = ba.busqueda_id
+          WHERE b.id = ?; """, (id,))
+    filas = c.fetchall()
+    resultados = []
+    for fila in filas:
+        rdo = {
+            'Titulo': fila[0],
+            'Citas': fila[1],
+            'Año': fila[2],
+            'Enlace': fila[3],
+            'Autor 1': fila[4],
+            'Autor 2': fila[5],
+            'Autor 3': fila[6],
+        }
+        resultados.append(rdo)
+    resultados_json = json.dumps(resultados, indent=4)
+    conn.close()
+    return resultados_json
 
 @app.route('/api/test', methods=['GET'])
 def saludar():

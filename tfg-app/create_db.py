@@ -44,11 +44,23 @@ c.execute("INSERT INTO busquedas_articulos VALUES (1,2)")
 
 c.execute('SELECT * FROM articulos')
 articulos = c.fetchall() #puede ser fetchone() o fetchmany(x)
-print(articulos)
+#print(articulos)
 
 c.execute('SELECT * FROM busquedas')
 busquedas = c.fetchall() #puede ser fetchone() o fetchmany(x)
-print(busquedas)
+#print(busquedas)
 
-#conn.commit() # Para que se guarden los cambis
+c.execute('SELECT * FROM busquedas_articulos')
+busquedasArticulos = c.fetchall()
+#print(busquedasArticulos)
+
+c.execute("""
+          SELECT a.* FROM articulos a
+          INNER JOIN busquedas_articulos ba ON a.id = ba.articulo_id
+          INNER JOIN busquedas b ON b.id = ba.busqueda_id
+          WHERE b.id = '1'; """)
+rdo = c.fetchall()
+print(rdo)
+
+conn.commit() # Para que se guarden los cambis
 conn.close() # Cerramos la conexion (buena practica)
