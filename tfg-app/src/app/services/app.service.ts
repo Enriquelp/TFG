@@ -13,6 +13,7 @@ export class AppService{
     urlBuscarOnline: string = 'http://127.0.0.1:5000/api/buscar-online';
     urlBuscarBD: string = 'http://127.0.0.1:5000/api/busquedas-anteriores'
     urlBusquedaArticulos: string = 'http://127.0.0.1:5000/api/busqueda-bd'
+    urlGuardarBusqueda: string = 'http://127.0.0.1:5000/api/almacenarBusqueda'
     urltest: string ='http://127.0.0.1:5000/api/test'
     urlDescargar: string = 'http://127.0.0.1:5000/api/descargarCSV'
 
@@ -32,6 +33,13 @@ export class AppService{
     getBusquedasArticulos(id:number): Observable<any>{
         let params = new HttpParams()
         .set('idBusqueda', id);
+       return this.http.get(this.urlBusquedaArticulos, {params})
+    }
+
+    postGuardarBusqueda(busqueda:string, articulos: Record<string, any>): Observable<any>{
+        let params = new HttpParams()
+        .set('busqueda', busqueda)
+        .set('articulos', articulos );
        return this.http.get(this.urlBusquedaArticulos, {params})
     }
 

@@ -6,13 +6,13 @@ c = conn.cursor()
 # tabla para almacenar los autores
 c.execute(""" CREATE TABLE IF NOT EXISTS autores (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT,
+          nombre TEXT UNIQUE,
           firma TEXT)
           """)
 # tabla para almacenar los articulos
 c.execute(""" CREATE TABLE IF NOT EXISTS articulos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        titulo TEXT,
+        titulo TEXT UNIQUE,
         citas INTEGER DEFAULT 0,
         fecha_publicacion INTERGER,
         enlace TEXT,
@@ -23,7 +23,7 @@ c.execute(""" CREATE TABLE IF NOT EXISTS articulos (
 # tabla para almacenar las busquedas
 c.execute(""" CREATE TABLE IF NOT EXISTS busquedas (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
-          busqueda TEXT,
+          busqueda TEXT UNIQUE,
           fecha DATE)
           """)
 # tabla que relaciona una busqueda con varios articulos
@@ -60,7 +60,7 @@ c.execute("""
           INNER JOIN busquedas b ON b.id = ba.busqueda_id
           WHERE b.id = '1'; """)
 rdo = c.fetchall()
-print(rdo)
+#print(rdo)
 
 conn.commit() # Para que se guarden los cambis
 conn.close() # Cerramos la conexion (buena practica)
