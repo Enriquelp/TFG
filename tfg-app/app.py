@@ -193,8 +193,15 @@ def saludar():
 # Almacena la busqueda realizada relacionandola con los articulos encontrados en dicha busqueda
 @app.route('/api/almacenarBusqueda', methods=['POST'])
 def almacenarBusqueda():
-    busqueda = request.args.get('busqueda')
-    articulos = request.args.get('articulos')
+    data = request.json
+    busqueda = data['busqueda']
+    articulos = data['articulos']
+    
+    print("Búsqueda:", busqueda)
+    print("Artículos:", articulos)
+
+    
+    
     conn = sqlite3.connect('databaseTFG.db') # creamos la conexion con la base de datos (si no existe la db, la crea)
     c = conn.cursor()
     
@@ -205,17 +212,17 @@ def almacenarBusqueda():
         idBusqueda = c.lastrowid
     except sqlite3.IntegrityError: # si ya estuviera, buscamos el id
         print("Esta busqueda ya se ha realizado antes")
-        c.execute(""" SELECT id from busquedas WHERE busqueda = ? """, (busqueda))
+        c.execute(""" SELECT id from busquedas WHERE busqueda = ? """, (busqueda,))
         idBusqueda = c.fetchone()[0]
         
     for articulo in articulos: # añadimos cada articuloq ue se haya encontrado
         try:
-            c.execute("""INSERT INTO articulos (titulo, citas, fecha_publicacion, enlace, aut_1, aut_2, aut_3) values (?,?,?,?,?,?,?,)""" (articulo.titulo, articulo.citas, articulo.fecha_publicacion, articulo.enlace, articulo.aut_1, articulo.aut_2, articulo.aut_3))
+            c.execute("""INSERT INTO articulos (titulo, citas, fecha_publicacion, enlace, aut_1, aut_2, aut_3) values (?,?,?,?,?,?,?)""" , (articulo['Titulo'], articulo['Citas'], articulo['Año'], articulo['Enlace'], articulo['Autor 1'],articulo['Autor 2'], articulo['Autor 3']))
             conn.commit()        
             idArticulo = c.lastrowid
         except sqlite3.IntegrityError:
             print("El articulo ya existe en la base de datos")
-            c.execute(""" SELECT id from articulos WHERE titulo = ? """, (articulo.titulo))
+            c.execute(""" SELECT id from articulos WHERE titulo = ? """, (articulo['Titulo'],))
             idArticulo = c.fetchone()[0]
         
         try: # añadimos la relacion entre la busqueda y el articulo 
@@ -227,7 +234,7 @@ def almacenarBusqueda():
         
         
     conn.close
-    return null
+    return jsonify({'message': 'Datos almacenados correctamente'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True) 

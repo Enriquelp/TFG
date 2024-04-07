@@ -44,8 +44,18 @@ export class BusquedaComponent implements AfterViewInit {
   cargando: boolean = false;
 
 
-  guardarDatos(){
-    console.log('Datos guardados:', this.busqueda, this.idioma, this.paginas);
+  almacenarDatos(busqueda:string , listaArticulos: Articulo[]){
+    console.log('Datos guardados:', busqueda, listaArticulos);
+    this.service.postGuardarBusqueda(busqueda, listaArticulos).pipe(
+      catchError(err => {
+        this.error = 'Ha ocurrido un error al almacenar la busqueda.';
+        console.error(err);
+        return of(null);
+      })
+    ).subscribe(response =>{
+      console.log('Búsqueda y artículos guardados correctamente:', response);
+    })
+
   }
   
   cargarBusquedasAnteriores() {
@@ -95,6 +105,7 @@ export class BusquedaComponent implements AfterViewInit {
       console.log(this.datosBusqueda)
       this.cargando = false
       this.articulos_dataSource.data = this.datosBusqueda;
+      this.almacenarDatos(this.busqueda, this.datosBusqueda)
     })
   }
 }

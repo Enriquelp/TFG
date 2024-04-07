@@ -1,7 +1,7 @@
 
 <div class="formulario">
     <h3>Introduce los datos para buscar</h3>
-    <form (ngSubmit)="guardarDatos()">
+    <form>
         <mat-form-field>
             <mat-label>Busqueda</mat-label>
             <input matInput [(ngModel)]="busqueda" name="busqueda">
@@ -25,8 +25,8 @@
             </mat-select>
             <mat-hint> Buscar x primeras paginas</mat-hint>
         </mat-form-field>
-        <button mat-button type="submit" (click)="cargarBusquedasAnteriores() "data-bs-toggle="modal" data-bs-target="#busquedasModal">Busquedas anteriores</button>
         <button mat-button type="submit" (click)="buscarEnInternet()">Buscar en Google Schoolar</button>
+        <button mat-button type="submit" (click)="cargarBusquedasAnteriores() "data-bs-toggle="modal" data-bs-target="#busquedasModal">Busquedas anteriores</button>
     </form>
 
     <div class="cargando" *ngIf="cargando">
