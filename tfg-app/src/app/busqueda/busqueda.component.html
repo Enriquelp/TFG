@@ -37,41 +37,41 @@
 <mat-divider></mat-divider>
 
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="articulos_dataSource">
+    <table mat-table [dataSource]="articulos_dataSource" matSort>
 
     <!-- Titulo Column -->
     <ng-container matColumnDef="Titulo">
-        <th mat-header-cell *matHeaderCellDef> Título </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Título </th>
         <td mat-cell *matCellDef="let element"> {{element.Titulo}} </td>
     </ng-container>
 
     <!-- Citas Column -->
     <ng-container matColumnDef="Citas">
-        <th mat-header-cell *matHeaderCellDef> Citas </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Citas </th>
         <td mat-cell *matCellDef="let element"> {{element.Citas}} </td>
     </ng-container>
 
     <!-- Autor 1 Column -->
     <ng-container matColumnDef="Autor 1">
-        <th mat-header-cell *matHeaderCellDef> Autor 1 </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Autor 1 </th>
         <td mat-cell *matCellDef="let element"> {{element['Autor 1']}} </td>
     </ng-container>
 
     <!-- Autor 2 Column -->
     <ng-container matColumnDef="Autor 2">
-        <th mat-header-cell *matHeaderCellDef> Autor 2 </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Autor 2 </th>
         <td mat-cell *matCellDef="let element"> {{element['Autor 2']}} </td>
     </ng-container>
 
     <!-- Autor 3 Column -->
     <ng-container matColumnDef="Autor 3">
-        <th mat-header-cell *matHeaderCellDef> Autor 3 </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Resto de autores </th>
         <td mat-cell *matCellDef="let element"> {{element['Autor 3']}} </td>
     </ng-container>
 
     <!-- Año publicacion Column -->
     <ng-container matColumnDef="Año de publicación">
-        <th mat-header-cell *matHeaderCellDef> Año de publicación </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Año de publicación </th>
         <td mat-cell *matCellDef="let element"> {{element['Año']}} </td>
     </ng-container>
 
@@ -91,7 +91,7 @@
 
     <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                 showFirstLastButtons
-                aria-label="Select page of periodic elements">
+                aria-label="Selecciona paginas para articulos">
     </mat-paginator>
 </div>
 
@@ -104,20 +104,32 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Búsqueda</th>
-                        <th>Fecha</th>
-                    </tr>
-                  </thead>
-                  <tbody >
-                    <tr *ngFor="let rdo of busquedaAnterior" (click)="onClickFila(rdo)" data-bs-dismiss="modal">
-                        <td>{{ rdo[1] }}</td>
-                        <td>{{ rdo[2] }}</td>
-                    </tr>
-                  </tbody>
+            
+    
+            <table mat-table [dataSource]="busquedas_dataSource" class="table table-hover" matSort>
+
+                <!-- Busqueda Column -->
+                <ng-container matColumnDef="Busqueda">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Busqueda </th>
+                    <td mat-cell *matCellDef="let element"> {{element[1]}} </td>
+                </ng-container>
+
+                <!-- Fecha Column -->
+                <ng-container matColumnDef="Fecha">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                    <td mat-cell *matCellDef="let element"> {{element[2]}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="busquedas_displayedColumns"></tr>
+                <tr mat-row (click)="onClickFila(row)" data-bs-dismiss="modal" *matRowDef="let row; columns: busquedas_displayedColumns;"></tr>
             </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons
+                aria-label="Selecciona paginas para busquedas anteriores">
+            </mat-paginator>
+
+
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>

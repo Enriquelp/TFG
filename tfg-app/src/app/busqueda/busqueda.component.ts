@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort, MatSortModule } from '@angular/material/sort';
 import { AppService } from '../services/app.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -20,21 +20,31 @@ export class BusquedaComponent implements AfterViewInit {
   constructor(private service : AppService){}
 
   datosBusqueda: Articulo[] = []
-  busquedaAnterior: [] = []
   articulos_displayedColumns: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
   articulos_dataSource = new MatTableDataSource<Articulo>(this.datosBusqueda);
 
-  busquedas_displayedColumns: string[] = ['Titulo', 'Citas', 'Autor 1', 'Autor 2', 'Autor 3', 'Año de publicación', 'Enlace'];
-  busquedas_dataSource = new MatTableDataSource<Articulo>(this.datosBusqueda);
+  busquedaAnterior: Busqueda[] = []
+  busquedas_displayedColumns: string[] = ['Busqueda', 'Fecha'];
+  busquedas_dataSource = new MatTableDataSource<Busqueda>(this.busquedaAnterior);
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   @ViewChild(MatSort) 
   sort!: MatSort;
+  @ViewChild(MatPaginator)
+  paginatorBusquedas!: MatPaginator;
+  @ViewChild(MatSort) 
+  sortBusquedas!: MatSort;
+
+  
 
   ngAfterViewInit() {
     this.articulos_dataSource.paginator = this.paginator;
     this.articulos_dataSource.sort = this.sort;
+
+    this.busquedas_dataSource.paginator = this.paginatorBusquedas;
+    this.busquedas_dataSource.sort = this.sortBusquedas;
+
   }
 
   busqueda: string = ""
@@ -70,12 +80,14 @@ export class BusquedaComponent implements AfterViewInit {
       this.busquedaAnterior = response;
       this.error = ''
       console.log(this.busquedaAnterior)
+      this.busquedas_dataSource.data = this.busquedaAnterior
+      console.log(this.busquedas_dataSource)
     })
   }
 
-  onClickFila(rdo:any){
-    console.log("Se hizo clic en la fila:", rdo);
-    this.service.getBusquedasArticulos(rdo[0]).pipe(
+  onClickFila(row:any){
+    console.log("Se hizo clic en la fila:", row);
+    this.service.getBusquedasArticulos(row[0]).pipe(
       catchError(err => {
         this.error = 'Error al obtener los articulos de la busqueda seleccionada.';
         console.error(err);
@@ -100,11 +112,12 @@ export class BusquedaComponent implements AfterViewInit {
         return of(null);
       })
     ).subscribe(response =>{
-      this.datosBusqueda = response
+      this.datosBusqueda = response;
       this.error = ''
-      console.log(this.datosBusqueda)
+      // console.log(this.datosBusqueda)
       this.cargando = false
       this.articulos_dataSource.data = this.datosBusqueda;
+      // console.log(this.articulos_dataSource.data)
       this.almacenarDatos(this.busqueda, this.datosBusqueda)
     })
   }
@@ -118,5 +131,11 @@ export interface Articulo{
   'Autor 3': string;
   'Año': number;
   Enlace: string;
+}
+
+export interface Busqueda{
+  ID: number;
+  Busqueda: string;
+  Fecha: string;
 }
 
