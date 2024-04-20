@@ -10,9 +10,9 @@ table {
     width: 100%;
   }
 
-  .mat-elevation-z8{
+.mat-elevation-z8{
     margin: 25px 30px 25px 30px;
-  }
+}
 
 .botonSubir {
     display: flex;

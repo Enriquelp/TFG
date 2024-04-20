@@ -24,7 +24,7 @@ export class BusquedaComponent implements AfterViewInit {
   articulos_dataSource = new MatTableDataSource<Articulo>(this.datosBusqueda);
 
   busquedaAnterior: Busqueda[] = []
-  busquedas_displayedColumns: string[] = ['Busqueda', 'Fecha'];
+  busquedas_displayedColumns: string[] = ['Busqueda', 'Fecha', 'Accion'];
   busquedas_dataSource = new MatTableDataSource<Busqueda>(this.busquedaAnterior);
 
   @ViewChild(MatPaginator)
@@ -54,9 +54,9 @@ export class BusquedaComponent implements AfterViewInit {
   cargando: boolean = false;
 
 
-  almacenarDatos(busqueda:string , listaArticulos: Articulo[]){
-    console.log('Datos guardados:', busqueda, listaArticulos);
-    this.service.postGuardarBusqueda(busqueda, listaArticulos).pipe(
+  almacenarDatos(){
+    console.log('Datos guardados:', this.busqueda, this.articulos_dataSource.data);
+    this.service.postGuardarBusqueda(this.busqueda, this.articulos_dataSource.data).pipe(
       catchError(err => {
         this.error = 'Ha ocurrido un error al almacenar la busqueda.';
         console.error(err);
@@ -65,7 +65,27 @@ export class BusquedaComponent implements AfterViewInit {
     ).subscribe(response =>{
       console.log('Búsqueda y artículos guardados correctamente:', response);
     })
+  }
 
+  borrarBusqueda(row:any){
+
+  }
+
+  cargarBusqueda(row:any){
+    console.log("Se hizo clic en la fila:", row);
+    this.service.getBusquedasArticulos(row[0]).pipe(
+      catchError(err => {
+        this.error = 'Error al obtener los articulos de la busqueda seleccionada.';
+        console.error(err);
+        return of(null);
+      })
+    ).subscribe(response =>{
+      this.datosBusqueda = response
+      this.error = ''
+      console.log(this.datosBusqueda)
+      this.cargando = false
+      this.articulos_dataSource.data = this.datosBusqueda;
+    })
   }
   
   cargarBusquedasAnteriores() {
@@ -118,7 +138,6 @@ export class BusquedaComponent implements AfterViewInit {
       this.cargando = false
       this.articulos_dataSource.data = this.datosBusqueda;
       // console.log(this.articulos_dataSource.data)
-      this.almacenarDatos(this.busqueda, this.datosBusqueda)
     })
   }
 }
