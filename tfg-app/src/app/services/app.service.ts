@@ -15,8 +15,10 @@ export class AppService{
     urlBuscarBD: string = 'http://127.0.0.1:5000/api/busquedas-anteriores'
     urlBusquedaArticulos: string = 'http://127.0.0.1:5000/api/busqueda-bd'
     urlAlmacenarBusqueda: string = 'http://127.0.0.1:5000/api/almacenarBusqueda'
-    urltest: string ='http://127.0.0.1:5000/api/test'
     urlDescargar: string = 'http://127.0.0.1:5000/api/descargarCSV'
+    urlBorrarBusqueda: string = 'http://127.0.0.1:5000/api/borrarBusqueda'
+    urltest: string ='http://127.0.0.1:5000/api/test'
+    
 
     getBusquedaOnline(busqueda: string, idioma: string, paginas: number): Observable<any>{
         let params = new HttpParams()
@@ -41,6 +43,10 @@ export class AppService{
        return this.http.post(this.urlAlmacenarBusqueda, {busqueda, articulos})
     }
 
+    postBorrarBusqueda(id:number){
+        return this.http.post(this.urlBorrarBusqueda, {id})
+    }
+
     getTest(busqueda: string, idioma: string, paginas: number): Observable<any>{
         let params = new HttpParams()
         .set('idioma', idioma)
@@ -48,6 +54,7 @@ export class AppService{
         .set('paginas', paginas);
        return this.http.get(this.urltest, {params})
     }
+
 
 
 

@@ -236,5 +236,23 @@ def almacenarBusqueda():
     conn.close
     return jsonify({'message': 'Datos almacenados correctamente'}), 200
 
+@app.route('/api/borrarBusqueda', methods=['POST'])
+def borrarBusqueda():
+    data = request.json
+    id = data['id']
+    
+    conn = sqlite3.connect('databaseTFG.db') # creamos la conexion con la base de datos (si no existe la db, la crea)
+    c = conn.cursor()
+    
+    c.execute("""DELETE FROM busquedas_articulos
+        WHERE busqueda_id = ?; """, (id,))
+    
+    c.execute("""DELETE FROM busquedas
+        WHERE id = ?; """, (id,))
+ 
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'Busqueda borrada correctamente'}), 200
+
 if __name__ == '__main__':
     app.run(debug=True) 

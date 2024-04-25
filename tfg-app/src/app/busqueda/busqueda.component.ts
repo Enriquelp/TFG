@@ -68,7 +68,15 @@ export class BusquedaComponent implements AfterViewInit {
   }
 
   borrarBusqueda(row:any){
-
+      this.service.postBorrarBusqueda(row[0]).pipe(
+        catchError(err => {
+          this.error = 'Ha ocurrido un error al borrar la busqueda.';
+          console.error(err);
+          return of(null);
+        })
+      ).subscribe(response =>{
+        console.log('Búsqueda borrada correctamente:', response);
+      })
   }
 
   cargarBusqueda(row:any){
@@ -82,7 +90,6 @@ export class BusquedaComponent implements AfterViewInit {
     ).subscribe(response =>{
       this.datosBusqueda = response
       this.error = ''
-      console.log(this.datosBusqueda)
       this.cargando = false
       this.articulos_dataSource.data = this.datosBusqueda;
     })
