@@ -35,6 +35,15 @@ c.execute(""" CREATE TABLE IF NOT EXISTS busquedas_articulos (
         PRIMARY KEY (busqueda_id, articulo_id))
           """)
 
+# tabla que relaciona una busqueda con uno autor 
+c.execute(""" CREATE TABLE IF NOT EXISTS autores_articulos (
+        autor_id INTEGER,
+        articulo_id INTEGER,
+        FOREIGN KEY (autor_id) REFERENCES autores(id),
+        FOREIGN KEY (articulo_id) REFERENCES articulos(id),
+        PRIMARY KEY (autor_id, articulo_id))
+          """)
+
 #Creamos unos datos de prueba
 c.execute("INSERT INTO articulos VALUES (1, 'La valoracion de la prueba', 490, 2018, 'http://www.derechopenalenlared.com/libros/la-valoracion-de-la-prueba-jordi-nieva.pdf', 'J Nieva Fenoll', '', '')")
 c.execute("INSERT INTO articulos VALUES (2, 'Eportafolios en Procesos Blendedlearning Innovaciones de la Evaluacin en los Crditos Europeos', 56, 2009, 'https://revistas.um.es/redu/article/download/69941/67411', 'R Barragán', 'R García', 'O Buzón')")

@@ -214,10 +214,12 @@ def almacenarBusqueda():
         print("Esta busqueda ya se ha realizado antes")
         c.execute(""" SELECT id from busquedas WHERE busqueda = ? """, (busqueda,))
         idBusqueda = c.fetchone()[0]
+        c.execute(""" UPDATE busquedas SET fecha = ? WHERE id = ? """, (datetime.now().strftime("%d-%m-%Y"), idBusqueda)) # Actualizamos la fecha de busqueda
+        conn.commit()
         
-    for articulo in articulos: # añadimos cada articuloq ue se haya encontrado
+    for articulo in articulos: # añadimos cada articulo que se haya encontrado
         try:
-            c.execute("""INSERT INTO articulos (titulo, citas, fecha_publicacion, enlace, aut_1, aut_2, aut_3) values (?,?,?,?,?,?,?)""" , (articulo['Titulo'], articulo['Citas'], articulo['Año'], articulo['Enlace'], articulo['Autor 1'],articulo['Autor 2'], articulo['Autor 3']))
+            c.execute("""INSERT INTO articulos (titulo, citas, fecha_publicacion, enlace, aut_1, aut_2, aut_3) values (?,?,?,?,?,?,?)""" , (articulo['Titulo'], articulo['Citas'], articulo['Año'], articulo['Enlace'], articulo['Autor 1'], articulo['Autor 2'], articulo['Autor 3']))
             conn.commit()        
             idArticulo = c.lastrowid
         except sqlite3.IntegrityError:
@@ -230,8 +232,38 @@ def almacenarBusqueda():
             conn.commit()
         except sqlite3.IntegrityError:
             print("Relacion entre busqueda y articulo ya existente")
-    
         
+        if articulo['Autor 1'] != '': 
+            try: # añadimos al primer autor
+                c.execute(""" INSERT INTO autores (nombre) VALUES (?) """, (articulo['Autor 1'],))
+                idAutor1 = c.lastrowid
+                conn.commit()
+            except sqlite3.IntegrityError:
+                c.execute(""" SELECT id from autores WHERE nombre = ? """, (articulo['Autor 1'],))
+                idAutor1 = c.fetchone()[0]
+                print ("El autor ya existe")
+                
+            try: # añadimos la relacion entre el articulo y el primer autor
+                c.execute(""" INSERT INTO autores_articulos values (?,?) """, (idAutor1, idArticulo))
+                conn.commit()
+            except sqlite3.IntegrityError:
+                print ("Relacion entre articulo y autor 1 ya existente")
+        
+        if articulo['Autor 2'] != '':
+            try: # añadimos al segundo autor
+                c.execute(""" INSERT INTO autores (nombre) VALUES (?) """, (articulo['Autor 2'],))
+                idAutor2 = c.lastrowid
+                conn.commit()
+            except sqlite3.IntegrityError:
+                c.execute(""" SELECT id from autores WHERE nombre = ? """, (articulo['Autor 2'],))
+                idAutor2 = c.fetchone()[0]
+                print ("El autor ya existe")
+
+            try: # añadimos la relacion entre el articulo y el segundo autor
+                c.execute(""" INSERT INTO autores_articulos values (?,?) """, (idAutor2, idArticulo))
+                conn.commit()
+            except sqlite3.IntegrityError:
+                print ("Relacion entre articulo y autor 1 ya existente")  
         
     conn.close
     return jsonify({'message': 'Datos almacenados correctamente'}), 200

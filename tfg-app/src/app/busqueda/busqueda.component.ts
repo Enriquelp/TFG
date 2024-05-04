@@ -92,6 +92,7 @@ export class BusquedaComponent implements AfterViewInit {
       this.error = ''
       this.cargando = false
       this.articulos_dataSource.data = this.datosBusqueda;
+      this.busqueda = row[1]
     })
   }
   
