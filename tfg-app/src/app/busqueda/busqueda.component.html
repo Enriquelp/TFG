@@ -26,7 +26,6 @@
             <mat-hint> Buscar x primeras paginas</mat-hint>
         </mat-form-field>
         <button mat-button type="submit" (click)="buscarEnInternet()">Buscar en Google Schoolar</button>
-        <button mat-button type="submit" (click)="cargarBusquedasAnteriores() "data-bs-toggle="modal" data-bs-target="#busquedasModal">Busquedas anteriores</button>
     </form>
 
     <div class="cargando" *ngIf="cargando">
@@ -42,7 +41,7 @@
 
 
 <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="articulos_dataSource" matSort>
+    <table mat-table #sortArticulos='matSort' [dataSource]="articulos_dataSource" matSort>
 
     <!-- Titulo Column -->
     <ng-container matColumnDef="Titulo">
@@ -94,39 +93,45 @@
     <tr mat-row *matRowDef="let row; columns: articulos_displayedColumns;"></tr>
     </table>
 
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+    <mat-paginator #paginatorBusquedas='matPaginator' [pageSizeOptions]="[5, 10, 20]"
                 showFirstLastButtons
                 aria-label="Selecciona paginas para articulos">
     </mat-paginator>
 </div>
 
-<!-- MODAL -->
-<div class="modal fade" id="busquedasModal" tabindex="-1" aria-labelledby="busquedasModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5" id="busquedasModalLabel">Busquedas anteriores</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            
-    
-            <table mat-table [dataSource]="busquedas_dataSource" class="table table-hover" matSort>
+<mat-accordion >
+    <mat-expansion-panel (opened)="cargarBusquedasAnteriores()" (opened)="panelOpenState = true" (closed)="panelOpenState = false" class="mat-elevation-z8 w-50">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Busquedas anteriores
+        </mat-panel-title>
+        <mat-panel-description>
+            Consulta las busquedas guardadas en la base de datos
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+        <mat-form-field>
+            <mat-label>Filtro</mat-label>
+            <input matInput (keyup)="applyFilter($event)" #input>
+        </mat-form-field>
+
+        <div class="busquedas-container">
+            <table mat-table [dataSource]="busquedas_dataSource" class="table table-hover">
 
                 <!-- Busqueda Column -->
                 <ng-container matColumnDef="Busqueda">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Busqueda </th>
+                    <th mat-header-cell *matHeaderCellDef> Busqueda </th>
                     <td mat-cell *matCellDef="let element"> {{element[1]}} </td>
                 </ng-container>
 
                 <!-- Fecha Column -->
                 <ng-container matColumnDef="Fecha">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
                     <td mat-cell *matCellDef="let element"> {{element[2]}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="Accion">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
+                    <th mat-header-cell *matHeaderCellDef>  </th>
                     <td mat-cell *matCellDef="let element">
                         <button type="button" class="btn btn-primary btn-sm mx-1" (click)="cargarBusqueda(element)"><mat-icon >upload</mat-icon></button>
                         <button type="button" class="btn btn-danger btn-sm" (click)="borrarBusqueda(element)"><mat-icon >delete</mat-icon></button>
@@ -134,20 +139,9 @@
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="busquedas_displayedColumns"></tr>
-                <tr mat-row data-bs-dismiss="modal" *matRowDef="let row; columns: busquedas_displayedColumns;"></tr>
+                <tr mat-row *matRowDef="let row; columns: busquedas_displayedColumns;"></tr>
             </table>
-
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                showFirstLastButtons
-                aria-label="Selecciona paginas para busquedas anteriores">
-            </mat-paginator>
-
-
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
-        </div>
-        </div>
-    </div>
-</div>
+         </div>          
+    </mat-expansion-panel>
+</mat-accordion>
 

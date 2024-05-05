@@ -27,24 +27,23 @@ export class BusquedaComponent implements AfterViewInit {
   busquedas_displayedColumns: string[] = ['Busqueda', 'Fecha', 'Accion'];
   busquedas_dataSource = new MatTableDataSource<Busqueda>(this.busquedaAnterior);
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
-  @ViewChild(MatSort) 
-  sort!: MatSort;
-  @ViewChild(MatPaginator)
-  paginatorBusquedas!: MatPaginator;
-  @ViewChild(MatSort) 
-  sortBusquedas!: MatSort;
+  panelOpenState = false;
+
+  @ViewChild('paginatorArticulos') paginatorArticulos!: MatPaginator;
+  @ViewChild('sortArticulos') sortArticulos!: MatSort;
+
 
   
 
   ngAfterViewInit() {
-    this.articulos_dataSource.paginator = this.paginator;
-    this.articulos_dataSource.sort = this.sort;
+    this.articulos_dataSource.paginator = this.paginatorArticulos;
+    this.articulos_dataSource.sort = this.sortArticulos;
 
-    this.busquedas_dataSource.paginator = this.paginatorBusquedas;
-    this.busquedas_dataSource.sort = this.sortBusquedas;
+  }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.busquedas_dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   busqueda: string = ""
@@ -64,6 +63,10 @@ export class BusquedaComponent implements AfterViewInit {
       })
     ).subscribe(response =>{
       console.log('Búsqueda y artículos guardados correctamente:', response);
+      if (this.panelOpenState == true){
+        this.cargarBusquedasAnteriores()
+      }
+
     })
   }
 
@@ -76,11 +79,11 @@ export class BusquedaComponent implements AfterViewInit {
         })
       ).subscribe(response =>{
         console.log('Búsqueda borrada correctamente:', response);
+        this.cargarBusquedasAnteriores()
       })
   }
 
   cargarBusqueda(row:any){
-    console.log("Se hizo clic en la fila:", row);
     this.service.getBusquedasArticulos(row[0]).pipe(
       catchError(err => {
         this.error = 'Error al obtener los articulos de la busqueda seleccionada.';
@@ -110,23 +113,6 @@ export class BusquedaComponent implements AfterViewInit {
       console.log(this.busquedaAnterior)
       this.busquedas_dataSource.data = this.busquedaAnterior
       console.log(this.busquedas_dataSource)
-    })
-  }
-
-  onClickFila(row:any){
-    console.log("Se hizo clic en la fila:", row);
-    this.service.getBusquedasArticulos(row[0]).pipe(
-      catchError(err => {
-        this.error = 'Error al obtener los articulos de la busqueda seleccionada.';
-        console.error(err);
-        return of(null);
-      })
-    ).subscribe(response =>{
-      this.datosBusqueda = response
-      this.error = ''
-      console.log(this.datosBusqueda)
-      this.cargando = false
-      this.articulos_dataSource.data = this.datosBusqueda;
     })
   }
 

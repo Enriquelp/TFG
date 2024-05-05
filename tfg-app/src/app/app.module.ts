@@ -21,6 +21,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 
 @NgModule({
@@ -48,7 +49,7 @@ import { MatSortModule } from '@angular/material/sort';
     HttpClientModule,
     MatProgressSpinnerModule,
     MatSortModule,
-    
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]
