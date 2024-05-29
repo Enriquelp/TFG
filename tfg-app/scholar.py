@@ -27,14 +27,16 @@ def buscar(idioma, busqueda, paginas):
     # Cambiamos el string a buscar para poder meterlo en la url
     busqueda = busqueda.replace(' ', '+')
     
-    # iteramos por lass diferentes paginas hasta llegar al numero de paginas especificado
+    # iteramos por las diferentes paginas hasta procesar numero de paginas especificado
     cont=0
     while(cont <= paginas):
+        # modifica la url para añadir los parametros de bsuqueda
         url = raiz+f'scholar?hl={idioma}&as_sdt=0%2C5&q={busqueda}&start={str(cont)}0'
+        # obtenemos el contenido de lapagina y lo preprocesamos con bs4
         page = requests.get(url)
         soup = BeautifulSoup(page.content, 'html.parser')
+        # nos quedamos con todos los div (en una lista) que tengan como nombre de clase los especificados en la funcion
         resultados = soup.findAll('div', class_='gs_r gs_or gs_scl')
-        
         
         # Iteramos por cada resultado guardando los datos que nos interesan
         for i in resultados:
@@ -44,13 +46,14 @@ def buscar(idioma, busqueda, paginas):
             enlace = i.find('div', class_='gs_or_ggsm')
             if cuerpo is not None:
             
-                # titulo
+                # buscamos el titulo
                 if cuerpo.find('h3', class_='gs_rt').find('a'):
                     tit = cuerpo.find('h3', class_='gs_rt').find('a')
-                    titulos.append(re.sub(r'[^a-zA-Z0-9\s]', '', tit.text)) #eliminamos los caracteres no alfanumericos del titulo
+                    #eliminamos los caracteres no alfanumericos del titulo
+                    titulos.append(re.sub(r'[^a-zA-Z0-9\s]', '', tit.text)) 
                 else: titulos.append("No encontrado")
                 
-                # citas
+                # buscamos las citas
                 if cuerpo.find('div', class_='gs_fl').find_all('a')[2]:
                     num_citas = cuerpo.find('div', class_='gs_fl').find_all('a')[2]
                     num_citas = re.findall('[1234567890]+', num_citas.text)
@@ -60,9 +63,11 @@ def buscar(idioma, busqueda, paginas):
                         citas.append('0')
                 else: titulos.append("No encontrado")
 
-                # autor y fecha
+                # buscamos el autor y la fecha fecha
                 if cuerpo.find('div', class_='gs_a'):
+                    # aut es un string que contiene los autores del articulo, ademas de la fecha
                     aut = cuerpo.find('div', class_='gs_a')
+                    # Con ayuda de la funcion tratar_autores, rescatamos toda la informacion que necesitamos
                     autores1, autores2, autores3, anoPublicacion, listaAutores = tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutores)
                 else: titulos.append("No encontrado")
                 
@@ -75,28 +80,33 @@ def buscar(idioma, busqueda, paginas):
         cont +=1
         time.sleep(2) # Paramos la ejecucion 2 segudno para evitar bloqueos de scrapping
             
-    # creamos los dataframe y guardamos los datos en csv
-    df_autores = pd.DataFrame({"Nombre": listaAutores, "firma": ""})
-    df_autores.to_csv("Lista de autores", index=False)
-    #print(df_autores)
+    # creamos los dataframes y guardamos los datos en csv (se han comentado las lineas que guardan en un archivo estas busquedas)
+    df_autores = pd.DataFrame({"Nombre": listaAutores, "firma": ""}) # no se usa actualmente
+    #df_autores.to_csv("Lista de autores", index=False)
     df_articulos = pd.DataFrame({'Titulo': titulos, 'Citas': citas, 'Año': anoPublicacion, 'Enlace': link,'Autor 1': autores1, 'Autor 2': autores2, 'Autor 3': autores3, })
-    df_articulos.to_csv("Lista de articulos", index=False)
-    # print(df_articulos) 
+    #df_articulos.to_csv("Lista de articulos", index=False)
+
+    #devolvemos un json con los datos procesados
     return jsonify(df_articulos.to_dict(orient='records'))
 
-# Tratamos el string para eliminar todo lo que no sea el nombre del autor o autores, y de paso guardamos la fecha
+# Tratamos el string para eliminar todo lo que no sea el nombre del autor o autores, y tambien guardamos la fecha
 def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutores):
+    # variables donde guardaremos los autores y la fecha
     aut1 = ''
     aut2 = ''
     aut3 = ''
     str=''
     fecha = ''
+    # variables auxiliares
     seguir = True
     i = 0
     numeros = ['1','2','3','4','5','6','7','8','9','0']
+
+    # iteramos por cada caracter de la lista de autores + fecha.
     for j in aut:
         str = str + j.text
     while(seguir):
+        # si no sencontramos un numero, ya no hay mas autores, y lo que sigue es la fecha
         if any(x in numeros for x in list(str.partition('-')[0])):
             seguir = False
             fecha = str.partition('-')[0]
@@ -106,7 +116,7 @@ def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutor
                 str = str.partition('-')[2]
             else: seguir = False
         
-    
+    # algunos nombres de autor vienen separados por un guion, debemos quitarlo
     aut1 = aut1.replace('-', '')
     
     # miramos si hay mas de un autor en la publicacion y los separamos
@@ -119,14 +129,16 @@ def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutor
     
     fecha = re.findall('[1234567890]+', str)[0]
     
+    # eliminamos espacis en blanco que puedan haber al principio y al final de los autores
     aut1 = aut1.strip()
     aut2 = aut2.strip()
     aut3 = aut3.strip()
-    
+    # Guardamos los tres primeros autores y la fecha
     autores1.append(aut1)
     autores2.append(aut2)
     autores3.append(aut3)
     anoPublicacion = fecha
+    # si los autores no son cadenas vacias, los guardo en la listaAutores (una lista para poder guardarlos en un dataframe)
     if aut1 != '' : listaAutores.append(aut1)
     if aut2 != '' : listaAutores.append(aut2)          
     if aut3 != '' : listaAutores.append(aut3)
