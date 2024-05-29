@@ -1,12 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from bs4 import BeautifulSoup
 import sqlite3 # Para la base de datos ligera
 import json
-import requests
-import pandas as pd
-import re # Para expresiones regulares
-import time # Para poder parar la ejecucion del codigo durante x segundos
 from datetime import datetime # Para obtener la fecha en la que se realizo la busqueda
 import scholar
 
