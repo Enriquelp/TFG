@@ -1,1 +1,63 @@
-<p>home works!</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Usuario</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Manual de Usuario</h1>
+        </header>
+        <section>
+            <p>
+                Esta aplicación web ayuda al usuario a encontrar artículos científicos en webs como Google Scholar, recogiendo la información más relevante para su filtración. 
+                En la parte superior se encuentra la cabecera con dos botones para navegar por la aplicación. El segundo botón lleva hacia la página donde se hacen las búsquedas.
+            </p>
+            <img src="assets/cabecera.png" alt="Cabecera de la aplicación web.">
+        </section>
+        <section>
+            <h2>Elementos de la página de búsqueda</h2>
+            <ul>
+                <li>
+                    <p>
+                        El apartado para introducir los datos de búsqueda consta de un cuadro de texto y dos desplegables. En el primero de ellos se introduce la cadena de texto a 
+                        buscar. En el segundo recuadro, que es el primer desplegable, muestra las opciones de idioma que pueden seleccionarse para realizar la búsqueda, y en el último
+                        recuadro, el segundo desplegable, permite al usuario escoger el número de páginas que va a consultar.
+                    </p>
+                    <img src="assets/recuadros_busqueda.png" alt="Sección donde el usuario introduce los parámetros de búsqueda.">
+                </li>
+                <li>
+                    <p>
+                        Justo debajo se encuentra la tabla donde se mostrarán los resultados encontrados. Las columnas mostradas son título, citas, autor 1, 2 resto de autores, 
+                        año de publicación y enlace. En esta última columna, haciendo clic en el símbolo, se abre una nueva ventana del navegador mostrando el artículo para facilitar 
+                        al usuario su lectura. Además, todas estas columnas se pueden ordenar haciendo clic sobre cada una de ellas.
+                    </p>
+                    <p>
+                        Se observa un botón de color verde llamado "Guardar resultados" cuya finalidad es la de permitir al usuario guardar la búsqueda en la base de datos, si es que 
+                        le ha resultado de utilidad, para poder consultarla en otro momento sin necesidad de ejecutar una nueva búsqueda.
+                    </p>
+                    <img src="assets/tabla_busquedas.png" alt="Tabla de resultados.">
+                </li>
+                <li>
+                    <p>
+                        Bajo la tabla de búsquedas antes mencionada se encuentra un desplegable que contiene las búsquedas realizadas anteriormente y que se encuentran en la base
+                        de datos. Posee 3 columnas: la primera corresponde con la cadena de texto que se introdujo. La segunda muestra la fecha en la que se guardó o actualizó dicha 
+                        búsqueda, y la última tiene dos iconos. 
+                    </p>
+                    <p>
+                        El icono azul tiene la función de cargar en la tabla de búsquedas todos los resultados almacenados desde la base de datos. El icono rojo de la papelera 
+                        permite borrar esta entrada de la base de datos si el usuario considera que ya no le es útil.
+                    </p>
+                    <p>
+                        Esta tabla también cuenta con un filtro, útil cuando se poseen gran cantidad de búsquedas guardadas y se quiere encontrar más fácilmente la que el usuario desea.
+                    </p>
+                    <img src="assets/tabla_busquedas_anteriores.png" alt="Tabla de búsquedas anteriores.">
+                </li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
+
