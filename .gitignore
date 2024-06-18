@@ -1,5 +1,4 @@
 env/
-Scraping/Lista de articulos
-Scraping/Lista de autores
-tfg-app/Lista de articulos
-tfg-app/Lista de autores
+Backend/databaseTFG.db
+Frontend/tfg-app/.vscode
+Frontend/tfg-app/.angular
