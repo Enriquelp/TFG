@@ -4,3 +4,4 @@ Frontend/tfg-app/.vscode
 Frontend/tfg-app/.angular
 databaseTFG.db
 Backend/__pycache__/
+node_modules

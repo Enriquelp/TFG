@@ -125,9 +125,12 @@ def tratar_autores(aut, autores1, autores2, autores3, anoPublicacion, listaAutor
         aut1 = aut1.partition(',')[0]
         if aut2.partition(',')[2] != '':
             aut3 = aut2.partition(',')[2]
-            aut2 = aut2.partition(',')[0]
+            aut2 = aut2.partition(',')[0]  
     
-    fecha = re.findall('[1234567890]+', str)[0]
+    try:
+        fecha = re.findall('[1234567890]+', str)[0]
+    except:
+        fecha = ''
     
     # eliminamos espacis en blanco que puedan haber al principio y al final de los autores
     aut1 = aut1.strip()
